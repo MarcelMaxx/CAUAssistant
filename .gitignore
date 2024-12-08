@@ -1,0 +1,40 @@
+# Gradle files
+.gradle/
+build/
+**/build/
+!gradle-wrapper.jar
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio files
+.idea/
+*.iml
+*.hprof
+
+# Keystore files
+*.jks
+
+# Generated files
+*.apk
+*.ap_
+*.dex
+*.class
+*.so
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA
+*.iws
+*.ipr
+
+# MacOS specific files
+.DS_Store
+
+# Other
+*.swp
+example.json
