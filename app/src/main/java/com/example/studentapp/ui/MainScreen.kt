@@ -20,7 +20,7 @@ fun MainScreen() {
             BottomNavigation(
                 backgroundColor = AppColors.Primary
             ) {
-                val items = listOf("Campus" to Icons.Default.Home, "Personal" to Icons.Default.Notifications)
+                val items = listOf("캡퍼스" to Icons.Default.Home, "개인" to Icons.Default.Notifications)
                 items.forEach { (label, icon) ->
                     BottomNavigationItem(
                         selected = false,
@@ -43,10 +43,10 @@ fun MainScreen() {
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = "Campus"
+            startDestination = "캡퍼스"
         ) {
-            composable("Campus") { CampusPage() }
-            composable("Personal") { PersonalPage() }
+            composable("캡퍼스") { CampusPage() }
+            composable("개인") { PersonalPage() }
         }
     }
 }

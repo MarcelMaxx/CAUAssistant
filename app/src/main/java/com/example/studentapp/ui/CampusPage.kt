@@ -23,12 +23,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -36,6 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.studentapp.ui.theme.AppColors
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun CampusPage() {
@@ -44,18 +47,48 @@ fun CampusPage() {
     var isCalendarClicked by remember { mutableStateOf(false) } // Control display of calendar page
     var isMapClicked by remember { mutableStateOf(false) } // Control display of map page
 
+    // Set system bar color
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !isSystemInDarkTheme()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = AppColors.Primary,
+            darkIcons = useDarkIcons
+        )
+    }
+
+    // Main content
     Column(modifier = Modifier.fillMaxSize()) {
         // Top title bar
-        TopBar()
-
-        // Switch button area
-        SwitchButtons(
-            selectedTab = selectedTab,
-            onTabSelected = { selectedTab = it }
+        androidx.compose.material.TopAppBar(
+            title = {
+                Text(
+                    text = "캠퍼스 생활",
+                    color = AppColors.OnPrimary,
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            },
+            backgroundColor = AppColors.Primary
         )
 
-        // Announcement list area
-        AnnouncementList(selectedTab)
+        // Announcement card area
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Switch button area
+            SwitchButtons(
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it },
+            )
+
+            // Announcement list area
+            AnnouncementList(selectedTab)
+        }
+
 
         // Bottom function button area, passing NavController for page navigation
         BottomFunctionButtons(navController)
@@ -76,16 +109,20 @@ fun CampusPage() {
 
 @Composable
 fun CalendarAndMapCards(onCalendarClick: () -> Unit, onMapClick: () -> Unit) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+    ) {
         // Calendar card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onCalendarClick() }
-                .padding(8.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(2.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.CardBackground)
+            colors = CardDefaults.cardColors(containerColor = AppColors.Secondary)
         ) {
             Row(
                 modifier = Modifier
@@ -94,31 +131,30 @@ fun CalendarAndMapCards(onCalendarClick: () -> Unit, onMapClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "학사일정", 
-                    fontSize = 24.sp, 
+                    text = "  학사일정",
+                    fontSize = 24.sp,
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    color = AppColors.OnBackground
+                    color = Color.DarkGray,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "바로보기", 
-                    fontSize = 16.sp, 
-                    color = AppColors.Secondary, 
+                    text = "바로보기",
+                    fontSize = 16.sp,
+                    color = Color.Gray,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         // Map card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onMapClick() }
-                .padding(8.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(2.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColors.CardBackground)
+            colors = CardDefaults.cardColors(containerColor = AppColors.Secondary)
         ) {
             Row(
                 modifier = Modifier
@@ -127,15 +163,17 @@ fun CalendarAndMapCards(onCalendarClick: () -> Unit, onMapClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "학교지도", 
-                    fontSize = 24.sp, 
+                    text = "  학교지도",
+                    fontSize = 24.sp,
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    color = AppColors.OnBackground
+                    color = Color.DarkGray,
+                    // AppColors.OnBackground,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "바로보기", 
-                    fontSize = 16.sp, 
-                    color = AppColors.Secondary, 
+                    text = "바로보기",
+                    fontSize = 16.sp,
+                    color = Color.Gray,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
@@ -273,15 +311,15 @@ fun SwitchButtons(selectedTab: String, onTabSelected: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(top = 8.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
         Button(
             onClick = { onTabSelected("학부공지") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedTab == "학부공지") MaterialTheme.colorScheme.primary else Color.Gray
+                containerColor = if (selectedTab == "학부공지") AppColors.PrimaryVariant else Color.Gray
             ),
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(text = "학부공지", color = Color.White)
         }
@@ -289,9 +327,9 @@ fun SwitchButtons(selectedTab: String, onTabSelected: (String) -> Unit) {
         Button(
             onClick = { onTabSelected("학과공지") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedTab == "학과공지") MaterialTheme.colorScheme.primary else Color.Gray
+                containerColor = if (selectedTab == "학과공지") AppColors.PrimaryVariant else Color.Gray
             ),
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(text = "학과공지", color = Color.White)
         }
@@ -303,22 +341,22 @@ fun AnnouncementList(selectedTab: String) {
     val context = LocalContext.current
     val announcements = if (selectedTab == "학부공지") {
         listOf(
-            "2024학년도 동계 디지털 직무 아카데미 / 코딩자격증 준비..." to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28391&pageNo=1",
-            "학교법인 중앙대학교 2024학년도 5차 이사회 개최 안내" to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28419&pageNo=1",
-            "한국지도자육성장학재단 2025학년도 신규장학생 선발 공고" to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28418&pageNo=1"
+            "2024학년도 동계 디지털 직무 아카데미 / 코딩..." to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28391&pageNo=1",
+            "학교법인 중앙대학교 2024학년도 5차 이사회..." to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28419&pageNo=1",
+            "한국지도자육성장학재단 2025학년도 신규학..." to "https://www.cau.ac.kr/cms/FR_CON/BoardView.do?MENU_ID=100&CONTENTS_NO=1&SITE_NO=2&P_TAB_NO=&TAB_NO=&BOARD_SEQ=4&BOARD_CATEGORY_NO=&BBS_SEQ=28418&pageNo=1"
         )
     } else {
         listOf(
             "2025학년도 1학기 재입학 시행 안내" to "https://cse.cau.ac.kr/sub05/sub0501.php?nmode=view&code=oktomato_bbs05&uid=3063&search=&keyword=&temp1=&offset=1",
             "2025학년도 전과(부) 시행 안내" to "https://cse.cau.ac.kr/sub05/sub0501.php?nmode=view&code=oktomato_bbs05&uid=3062&search=&keyword=&temp1=&offset=1",
-            "2024-2학기 기말고사 성적입력 및 최종성적평가 안내" to "https://cse.cau.ac.kr/sub05/sub0501.php?nmode=view&code=oktomato_bbs05&uid=3061&search=&keyword=&temp1=&offset=1"
+            "2024-2학기 기말고사 성적입력 및 최종성적평가..." to "https://cse.cau.ac.kr/sub05/sub0501.php?nmode=view&code=oktomato_bbs05&uid=3061&search=&keyword=&temp1=&offset=1"
         )
     }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(16.dp)
     ) {
         items(announcements.size) { index ->
             AnnouncementCard(
@@ -339,10 +377,9 @@ fun AnnouncementCard(title: String, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFE0F7FA)
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = AppColors.Secondary
         )
     ) {
         Text(
@@ -350,7 +387,8 @@ fun AnnouncementCard(title: String, onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            fontSize = 14.sp
+            fontSize = 16.sp,
+            color = Color.Black // Set the desired text color here
         )
     }
 }
@@ -378,14 +416,17 @@ fun BottomFunctionButtons(navController: NavController) {
                         }
                     },
                     modifier = Modifier
-                        .width(100.dp)
-                        .height(40.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
+                        .width(120.dp)
+                        .height(50.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AppColors.PrimaryVariant
+                    ),
                 ) {
                     Text(
                         text = function,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -401,9 +442,9 @@ fun BottomFunctionButtons(navController: NavController) {
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "Campus"
+        startDestination = "캡퍼스"
     ) {
-        composable("Campus") {
+        composable("캡퍼스") {
             CampusPage()
         }
         composable("EmptyClassroom") {

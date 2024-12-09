@@ -81,7 +81,7 @@ dependencies {
     debugImplementation ("androidx.compose.ui:ui-tooling:1.x.x")
     implementation ("androidx.compose.material3:material3:1.2.1")
     implementation("io.coil-kt:coil-compose:2.3.0")
-
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.0") // System UI Controller
     // Room数据库
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")

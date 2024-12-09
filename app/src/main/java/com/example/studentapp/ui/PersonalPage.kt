@@ -18,17 +18,41 @@ import androidx.browser.customtabs.CustomTabsIntent
 
 import android.content.Intent
 import androidx.compose.foundation.background
-
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.example.studentapp.ui.theme.AppColors
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalPage() {
+    // Set system bar color
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !isSystemInDarkTheme()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = AppColors.Primary,
+            darkIcons = useDarkIcons
+        )
+    }
     Column(modifier = Modifier.fillMaxSize()) {
 
         // Title bar
         TopAppBar(
-            title = { Text("개인", color = AppColors.OnPrimary) }, 
+            title = {
+                Text(
+                    text = "개인 수헙",
+                    color = AppColors.OnPrimary,
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            },
             backgroundColor = AppColors.Primary
         )
 
@@ -100,7 +124,6 @@ fun PersonalPage() {
                 )
             }
         }
-
     }
 }
 
@@ -110,7 +133,8 @@ fun SectionTitle(title: String) {
         text = title,
         style = MaterialTheme.typography.titleLarge, // Replaced h6
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp),
+        fontWeight = FontWeight.Bold
     )
 }
 
@@ -126,7 +150,8 @@ fun NotificationCard(title: String, date: String, contentUrl: String) {
                 val customTabsIntent = CustomTabsIntent.Builder().build()
                 customTabsIntent.launchUrl(context, intent.data!!)
             },
-        elevation = 4.dp
+        elevation = 2.dp,
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = title, style = MaterialTheme.typography.titleLarge) // Replaced h6
@@ -151,7 +176,8 @@ fun HomeworkCard(courseName: String, details: String, dueDate: String, homeworkU
                 val customTabsIntent = CustomTabsIntent.Builder().build()
                 intent.data?.let { customTabsIntent.launchUrl(context, it) }
             },
-        elevation = 4.dp
+        elevation = 2.dp,
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -177,7 +203,8 @@ fun ScheduleCard(courseName: String, location: String, time: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        elevation = 4.dp
+        elevation = 2.dp,
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -186,7 +213,7 @@ fun ScheduleCard(courseName: String, location: String, time: String) {
             )
             Text(
                 text = "강의실: $location",
-                style = MaterialTheme.typography.bodyLarge // Replaced body1
+                style = MaterialTheme.typography.bodyLarge,
             )
             Text(
                 text = "강의 시간: $time",
