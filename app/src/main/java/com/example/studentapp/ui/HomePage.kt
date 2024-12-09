@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -28,10 +27,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.studentapp.R
 
 @Composable
 fun HomePage() {
+    val navController = rememberNavController()
     var selectedTab by remember { mutableStateOf("校公告") } // 切换按钮的状态
     var isCalendarClicked by remember { mutableStateOf(false) } // 控制日历页面的显示
     var isMapClicked by remember { mutableStateOf(false) } // 控制地图页面的显示
@@ -49,8 +58,8 @@ fun HomePage() {
         // 公告列表区域
         AnnouncementList(selectedTab)
 
-        // 底部功能按钮区域
-        BottomFunctionButtons()
+        // 底部功能按钮区域，传递NavController用于页面导航
+        BottomFunctionButtons(navController)
 
         // 日历和地图卡片区域
         if (isCalendarClicked) {
@@ -163,6 +172,7 @@ fun WebViewPage(url: String, onBack: () -> Unit) {
         }
     }
 }
+
 @Composable
 fun MapImagePage(url: String, onBack: () -> Unit) {
     var isLoading by remember { mutableStateOf(true) }
@@ -176,7 +186,7 @@ fun MapImagePage(url: String, onBack: () -> Unit) {
 
         Spacer(modifier = Modifier.height(100.dp))
 
-        if (isLoading && !hasError) {
+        if (isLoading &&!hasError) {
             // 显示加载动画
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         }
@@ -201,15 +211,11 @@ fun MapImagePage(url: String, onBack: () -> Unit) {
             // 显示错误信息
             Text(
                 text = "地图加载失败，请检查网络或链接。",
-                color = Color.Red,
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textAlign = TextAlign.Center
+                color = Color.Red
             )
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -294,7 +300,6 @@ fun AnnouncementList(selectedTab: String) {
     }
 }
 
-
 @Composable
 fun AnnouncementCard(title: String, onClick: () -> Unit) {
     Card(
@@ -318,9 +323,8 @@ fun AnnouncementCard(title: String, onClick: () -> Unit) {
     }
 }
 
-
 @Composable
-fun BottomFunctionButtons() {
+fun BottomFunctionButtons(navController: NavController) {
     val functions = listOf("功能1", "功能2", "功能3", "功能4", "功能5", "功能6")
     Column(
         modifier = Modifier
@@ -334,7 +338,15 @@ fun BottomFunctionButtons() {
             ) {
                 row.forEach { function ->
                     Button(
-                        onClick = { /* 跳转功能 */ },
+                        onClick = {
+                            when (function) {
+                                "功能1" -> navController.navigate("EmptyClassroom")
+                                "功能2" -> navController.navigate("CanteenMenu")
+                                "功能3" -> navController.navigate("Professor")
+                                // 功能 4 - 6 的逻辑，添加对应导航目标，这里省略，你可以按需求补充
+                                else -> {}
+                            }
+                        },
                         modifier = Modifier
                             .width(100.dp)
                             .height(50.dp),
@@ -346,5 +358,28 @@ fun BottomFunctionButtons() {
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun SetupNavGraph(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "Home"
+    ) {
+        composable("Home") {
+            HomePage()
+        }
+        composable("EmptyClassroom") {
+            EmptyClassroomScreen()
+        }
+        composable("CanteenMenu") {
+            CanteenMenuScreen()
+        }
+        composable("Professor") {
+            ProfessorScreen()
+        }
+        // 为功能 4 - 6 添加对应的导航目标和Composable函数映射，这里省略，你可以按需求补充
     }
 }

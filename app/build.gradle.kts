@@ -93,4 +93,9 @@ dependencies {
     // JSON解析
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
+
+    implementation("androidx.room:room-runtime:2.5.2") // 使用 Room 数据库
+    ksp("androidx.room:room-compiler:2.6.1")          // Room 编译器（用于生成代码）
+    implementation("androidx.room:room-ktx:2.5.2")     // Room 的 Kotlin 扩展
 }

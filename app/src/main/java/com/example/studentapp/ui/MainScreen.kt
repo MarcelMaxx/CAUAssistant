@@ -11,7 +11,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Scaffold
 
 @Composable
-fun MainScreen() {
+    fun MainScreen() {
     val navController = rememberNavController()
 
     Scaffold(
