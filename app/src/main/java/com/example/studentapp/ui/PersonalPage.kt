@@ -17,53 +17,80 @@ import androidx.compose.ui.unit.dp
 import androidx.browser.customtabs.CustomTabsIntent
 
 import android.content.Intent
+import androidx.compose.foundation.background
 
-
+import com.example.studentapp.ui.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationsPage() {
+fun PersonalPage() {
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // 标题栏
-        TopAppBar(title = { Text("Notifications") }, backgroundColor = MaterialTheme.colorScheme.primary)
+        // Title bar
+        TopAppBar(
+            title = { Text("개인", color = AppColors.OnPrimary) }, 
+            backgroundColor = AppColors.Primary
+        )
 
-        // 通知内容
+        // Notification content
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .background(AppColors.Background)
         ) {
             item {
-                SectionTitle(title = "讲义公告")
+                SectionTitle(title = "강의 공지")
             }
             items(3) { index ->
-                val contentUrl = "https://example.com/lecture_${index + 1}"  // 模拟讲义公告对应的网页链接，实际需替换
                 NotificationCard(
-                    title = "讲义 ${index + 1}",
-                    date = "发布日期：2024-11-${28 + index}",
-                    contentUrl = contentUrl
+                    title = listOf(
+                        "고급 IoT 프로젝트 | 2차 동료평가 안내",
+                        "휴먼인터페이스미디어 | 눈이 많이 옵니다",
+                        "모바일 앱 개발 | 팀별 프로젝트 추진 수업 관련 공지"
+                    )[index],
+                    date = listOf(
+                        "11월 26일 오후 6:59",
+                        "11월 27일 오전 10:39",
+                        "11월 27일 오후 2:52"
+                    )[index],
+                    contentUrl = listOf(
+                        "https://eclass3.cau.ac.kr/courses/111717/discussion_topics/373559",
+                        "https://eclass3.cau.ac.kr/courses/111785/discussion_topics/373659",
+                        "https://eclass3.cau.ac.kr/courses/111728/discussion_topics/373718"
+                    )[index]
                 )
             }
+            
 
             item {
-                SectionTitle(title = "作业提醒")
+                SectionTitle(title = "과제 알림")
             }
             items(3) { index ->
-                val homeworkUrl = "https://example.com/homework_${index + 1}"  // 模拟作业提醒对应的网页链接，实际需替换
+                val homeworkUrl = "https://example.com/homework_${index + 1}"  // Simulated URL for homework reminders, replace with actual
                 HomeworkCard(
-                    courseName = listOf("软件工程", "数据库设计", "人工智能")[index],
+                    courseName = listOf("소프트웨어 공학", "데이터베이스 설계", "인공지능")[index],
                     details = listOf(
-                        "完成项目文档撰写",
-                        "设计数据库模式",
-                        "完成AI案例研究"
+                        "모바일 앱 개발 | 12/3 과제",
+                        "휴먼인터페이스미디어 | Peer-review",
+                        "CAU도전스타트업 | 소감문 제출요청"
                     )[index],
-                    dueDate = "截止日期：2024-12-0${index + 1}",
-                    homeworkUrl = homeworkUrl
+                    dueDate = listOf(
+                        "마감: 12월 3일 오후 2:50",
+                        "마감: 12월 10일 오전 10:00",
+                        "마감: 마감일 없음"
+                    )[index],
+                    homeworkUrl = listOf(
+                        "https://eclass3.cau.ac.kr/courses/111728/assignments/1505992",
+                        "https://eclass3.cau.ac.kr/courses/111785/assignments/1507106",
+                        "https://eclass3.cau.ac.kr/courses/114073/assignments/1506310"
+                    )[index],
                 )
             }
 
-            // 课程表部分
+            // Schedule section
             item {
-                SectionTitle(title = "课程表")
+                SectionTitle(title = "시간표")
             }
             items(ScheduleDataSource.getScheduleDataList()) { scheduleData ->
                 ScheduleCard(
@@ -81,7 +108,7 @@ fun NotificationsPage() {
 fun SectionTitle(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.titleLarge, // 替换 h6
+        style = MaterialTheme.typography.titleLarge, // Replaced h6
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 8.dp)
     )
@@ -102,10 +129,10 @@ fun NotificationCard(title: String, date: String, contentUrl: String) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, style = MaterialTheme.typography.titleLarge) // 替换 h6
+            Text(text = title, style = MaterialTheme.typography.titleLarge) // Replaced h6
             Text(
                 text = date,
-                style = MaterialTheme.typography.bodyMedium, // 替换 body2
+                style = MaterialTheme.typography.bodyMedium, // Replaced body2
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
             )
         }
@@ -128,16 +155,16 @@ fun HomeworkCard(courseName: String, details: String, dueDate: String, homeworkU
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "课程名称：$courseName",
-                style = MaterialTheme.typography.titleLarge // 替换 h6
+                text = "과목명: $courseName",
+                style = MaterialTheme.typography.titleLarge // Replaced h6
             )
             Text(
-                text = "作业详情：$details",
-                style = MaterialTheme.typography.bodyLarge // 替换 body1
+                text = "과제 세부사항: $details",
+                style = MaterialTheme.typography.bodyLarge // Replaced body1
             )
             Text(
                 text = dueDate,
-                style = MaterialTheme.typography.bodyMedium, // 替换 body2
+                style = MaterialTheme.typography.bodyMedium, // Replaced body2
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
             )
         }
@@ -154,16 +181,16 @@ fun ScheduleCard(courseName: String, location: String, time: String) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "课程名称：$courseName",
-                style = MaterialTheme.typography.titleLarge // 替换 h6
+                text = "과목명: $courseName",
+                style = MaterialTheme.typography.titleLarge // Replaced h6
             )
             Text(
-                text = "上课地点：$location",
-                style = MaterialTheme.typography.bodyLarge // 替换 body1
+                text = "강의실: $location",
+                style = MaterialTheme.typography.bodyLarge // Replaced body1
             )
             Text(
-                text = "上课时间：$time",
-                style = MaterialTheme.typography.bodyMedium, // 替换 body2
+                text = "강의 시간: $time",
+                style = MaterialTheme.typography.bodyMedium, // Replaced body2
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
             )
         }

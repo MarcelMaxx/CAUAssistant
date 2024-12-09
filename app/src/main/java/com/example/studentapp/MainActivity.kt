@@ -1,16 +1,10 @@
 package com.example.studentapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
-import com.example.studentapp.database.test.DatabaseTest
-import com.example.studentapp.ui.HomePage
 import com.example.studentapp.ui.MainScreen
 import com.example.studentapp.ui.theme.StudentAppTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

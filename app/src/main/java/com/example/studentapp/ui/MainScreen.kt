@@ -9,23 +9,33 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Scaffold
+import com.example.studentapp.ui.theme.AppColors
 
 @Composable
-    fun MainScreen() {
+fun MainScreen() {
     val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
-            BottomNavigation {
-                val items = listOf("Home" to Icons.Default.Home, "Notifications" to Icons.Default.Notifications)
+            BottomNavigation(
+                backgroundColor = AppColors.Primary
+            ) {
+                val items = listOf("Campus" to Icons.Default.Home, "Personal" to Icons.Default.Notifications)
                 items.forEach { (label, icon) ->
                     BottomNavigationItem(
                         selected = false,
                         onClick = {
                             navController.navigate(label)
                         },
-                        icon = { Icon(imageVector = icon, contentDescription = label) },
-                        label = { Text(label) }
+                        icon = { Icon(
+                            imageVector = icon, 
+                            contentDescription = label,
+                            tint = AppColors.OnPrimary
+                        ) },
+                        label = { Text(
+                            text = label,
+                            color = AppColors.OnPrimary
+                        ) }
                     )
                 }
             }
@@ -33,10 +43,10 @@ import androidx.compose.material3.Scaffold
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = "Home"
+            startDestination = "Campus"
         ) {
-            composable("Home") { HomePage() }
-            composable("Notifications") { NotificationsPage() }
+            composable("Campus") { CampusPage() }
+            composable("Personal") { PersonalPage() }
         }
     }
 }

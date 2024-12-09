@@ -10,19 +10,19 @@ object ScheduleDataSource {
     fun getScheduleDataList(): List<ScheduleData> {
         return listOf(
             ScheduleData(
-                courseName = "数学分析",
-                location = "教学楼101",
+                courseName = "빅 데이터",
+                location = "310관 727호",
                 time = "11:00 - 12:59"
             ),
             ScheduleData(
-                courseName = "大学物理",
-                location = "实验楼202",
-                time = "14:00 - 15:59"
+                courseName = "모바일 앱 개발",
+                location = "310관 729호",
+                time = "13:00 - 14:59"
             ),
             ScheduleData(
-                courseName = "英语读写",
-                location = "教学楼303",
-                time = "09:00 - 10:59"
+                courseName = "고급 IoT 프로젝트",
+                location = "310관 B311호",
+                time = "15:00 - 17:59"
             )
         )
     }
